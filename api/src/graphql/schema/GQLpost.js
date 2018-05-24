@@ -1,16 +1,18 @@
+import { dummyData } from '../dummyData';
+
 const types = `
   directive @hasRole(roles: [String]) on QUERY | FIELD | MUTATION
 
   type Post {
-    _id: String
+    _id: ID
     title: String
     message: String
   }
 `;
 
 const queries = `
-  post(_id:String!):Post @hasRole(roles:["admin"])
-  allPosts(project:String):[Post] @hasRole(roles:["user"])
+  post(_id:ID!):Post @hasRole(roles:["admin"])
+  allPosts:[Post] @hasRole(roles:["user","admin"])
 `;
 
 const mutations = `
@@ -23,12 +25,14 @@ const mutations = `
 
 const resolvers = {
   Query: {
-    post(obj, args) {
-      return {_id: '23234234', title: 'testmessage', 'message': 'testmessage'};
+    post(obj, {_id}) {
+      const post =  dummyData.find(entry => entry._id === parseInt(_id, 10));
+      console.log(post, _id);
+      return post;
     },
     allPosts(obj, {project}, context) {
       // return getAllPosts(project);
-      return [];
+      return dummyData;
     }
   },
   Mutation: {
