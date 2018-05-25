@@ -3,7 +3,6 @@ import {get} from 'lodash';
 const userLocationOnContext = 'user';
 
 const isLoggedIn = ctx => {
-  console.log(ctx);
   const user = ctxUser(ctx, userLocationOnContext);
   if (!user) throw new Error('Not logged in');
   return user;
@@ -15,6 +14,7 @@ const isRequestingUserAlsoOwner = ({ctx, userId, type, typeId}) =>
 
 export const directiveResolvers = {
   isAuthenticated: (next, source, args, ctx) => {
+    console.log(ctx.user);
     isLoggedIn(ctx);
     return next();
   },

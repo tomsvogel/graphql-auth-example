@@ -26,12 +26,11 @@ const mutations = `
 const resolvers = {
   Query: {
     post(obj, {_id}) {
-      const post =  dummyData.find(entry => entry._id === parseInt(_id, 10));
-      console.log(post, _id);
-      return post;
+      console.log('post');
+      return dummyData.find(entry => entry._id === parseInt(_id, 10));
     },
-    allPosts(obj, {project}, context) {
-      // return getAllPosts(project);
+    allPosts(obj, args, context) {
+      console.log('allPosts');
       return dummyData;
     }
   },

@@ -28,26 +28,14 @@ export function router(app) {
     res.send(printSchema(schema));
   });
 
+
   apiRoutes.use(
     '/graphql',
     jwtCheck,
     async function(req, res, next) {
-      try {
-        req.user.role = req.user['https://example.com/roles'][0];
-        Logger.info('user', req.user.email, req.user.role);
-        next();
-      } catch (err) {
-        //return same format than apollo
-        err = formatError(err);
-        if (err.name === 'TokenExpiredError' || err.name === 'TokenInvalidError') {
-          res.status(401).json('Auth required');
-        } else {
-          if (typeof err === 'string') {
-            err = JSON.parse(err);
-          }
-          res.json({errors: [err]});
-        }
-      }
+      req.user.role = req.user['https://example.com/roles'][0];
+      Logger.info('user', req.user.email, req.user.role);
+      next();
     },
     graphqlConnect(req => {
       return {
@@ -57,6 +45,7 @@ export function router(app) {
       };
     })
   );
+
 
   app.use('/', apiRoutes);
 }
